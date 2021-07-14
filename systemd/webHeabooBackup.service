@@ -1,0 +1,13 @@
+[Unit]
+Description=Heaboo's Website Service
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=pi
+ExecStart=/usr/bin/env node '/home/pi/heaboo_log_my_work/dbBackup/autoBackup.js'
+
+[Install]
+WantedBy=multi-user.target

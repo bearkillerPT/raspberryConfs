@@ -1,0 +1,13 @@
+[Unit]
+Description=Dynamic dns servie
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=pi
+ExecStart=/usr/bin/env sudo ddclient;
+
+[Install]
+WantedBy=multi-user.target
