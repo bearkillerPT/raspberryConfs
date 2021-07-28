@@ -4,7 +4,7 @@ After=network.target
 StartLimitIntervalSec=0
 [Service]
 Type=simple
-Restart=always
+Restart=on-failure
 RestartSec=1
 User=pi
 ExecStart=/usr/bin/env /home/pi/.yarn/bin/serve -l 3000 '/home/pi/repos-website/build'

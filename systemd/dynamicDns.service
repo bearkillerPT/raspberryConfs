@@ -5,9 +5,9 @@ StartLimitIntervalSec=0
 [Service]
 Type=simple
 Restart=always
-RestartSec=1
+RestartSec=3600
 User=pi
-ExecStart=/usr/bin/env sudo ddclient;
+ExecStart=/usr/bin/env sudo ddclient
 
 [Install]
 WantedBy=multi-user.target
