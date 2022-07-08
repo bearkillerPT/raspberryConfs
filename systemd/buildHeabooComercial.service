@@ -1,0 +1,14 @@
+[Unit]
+Description=Update and Build Heaboo Commercial
+After=network.target
+
+[Service]
+Type=oneshot
+User=pi
+WorkingDirectory=/home/pi/HeabooComercial/
+ExecStart=/home/pi/HeabooComercial/build.sh
+RemainAfterExit=true
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target
