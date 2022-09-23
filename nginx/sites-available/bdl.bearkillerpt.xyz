@@ -36,17 +36,17 @@ server {
 	#
 	# include snippets/snakeoil.conf;
 
-	root /home/pi/DataMining/WebApp/build;
+	root /home/pi/Board-Description-Language_and_ABDL/StandaloneCompiler/chess;
 
 	# Add index.php to the list if you are using PHP
 	index index.html;
 
-	server_name ed.bearkillerpt.xyz;
+	server_name bdl.bearkillerpt.xyz;
 
 	location / {
 		# First attempt to serve request as file, then
 		# as directory, then fall back to displaying a 404
-     		proxy_pass http://127.0.0.1:3004;
+     		proxy_pass http://127.0.0.1:3008;
      		proxy_set_header X-Real-IP $remote_addr;
      		proxy_set_header HOST $http_host;
 		try_files $uri $uri/ =404;
@@ -70,13 +70,9 @@ server {
 	#	deny all;
 	#}
     listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/bdl.bearkillerpt.xyz/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/bdl.bearkillerpt.xyz/privkey.pem; # managed by Certbot
 
-
-
-
-
-    ssl_certificate /etc/letsencrypt/live/bearkillerpt.xyz-0001/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/bearkillerpt.xyz-0001/privkey.pem; # managed by Certbot
 }
 
 
@@ -100,7 +96,7 @@ server {
 #}
 
 server {
-    if ($host = ed.bearkillerpt.xyz) {
+    if ($host = bdl.bearkillerpt.xyz) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
@@ -111,7 +107,7 @@ server {
 	listen 80;
 	listen [::]:80;
 
-	server_name ed.bearkillerpt.xyz;
+	server_name bdl.bearkillerpt.xyz;
     return 404; # managed by Certbot
 
 
