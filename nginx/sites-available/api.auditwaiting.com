@@ -36,22 +36,23 @@ server {
 	#
 	# include snippets/snakeoil.conf;
 
-	root /home/pi/imageServer/;
+	root /home/pi/HeabooComercial/api;
 
 	# Add index.php to the list if you are using PHP
 	index index.html;
 
-	server_name images.bearkillerpt.xyz;
+	server_name api.auditwaiting.com;
 
 	location / {
 		# First attempt to serve request as file, then
 		# as directory, then fall back to displaying a 404
-     		proxy_pass http://127.0.0.1:3007;
+     		proxy_pass http://127.0.0.1:3010;
      		proxy_set_header X-Real-IP $remote_addr;
      		proxy_set_header HOST $http_host;
-		#try_files $uri $uri/ index.html =404;
+		#try_files $uri $uri/ =404;
 	}
-	# passHP scripts to FastCGI server
+
+	# pass PHP scripts to FastCGI server
 	#
 	#location ~ \.php$ {
 	#	include snippets/fastcgi-php.conf;
@@ -69,15 +70,9 @@ server {
 	#	deny all;
 	#}
     listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/api.auditwaiting.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/api.auditwaiting.com/privkey.pem; # managed by Certbot
 
-
-
-
-
-
-
-    ssl_certificate /etc/letsencrypt/live/bearkillerpt.xyz-0001/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/bearkillerpt.xyz-0001/privkey.pem; # managed by Certbot
 }
 
 
@@ -101,7 +96,7 @@ server {
 #}
 
 server {
-    if ($host = images.bearkillerpt.xyz) {
+    if ($host = api.auditwaiting.com) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
@@ -112,7 +107,7 @@ server {
 	listen 80;
 	listen [::]:80;
 
-	server_name images.bearkillerpt.xyz;
+	server_name api.auditwaiting.com;
     return 404; # managed by Certbot
 
 
