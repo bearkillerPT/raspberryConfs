@@ -1,0 +1,17 @@
+[Unit]
+Description=droppy
+After=network.target
+
+[Service]
+ExecStart=/home/pi/.yarn/bin/droppy start -c /home/pi/.droppy/config -f /home/pi/.droppy/files
+WorkingDirectory=/home/pi/.droppy/files
+Environment="NODE_ENV=production"
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+Restart=always
+User=pi
+SyslogIdentifier=droppy
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
