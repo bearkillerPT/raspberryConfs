@@ -18,11 +18,8 @@
 
 # Default server configuration
 #
-
 server {
-  
 
-  #Upstream group for droppy 
 	# SSL configuration
 	#
 	# listen 443 ssl default_server;
@@ -39,33 +36,27 @@ server {
 	#
 	# include snippets/snakeoil.conf;
 
+	root /home/pi/audit_waiting/build;
 
-	server_name droppy.bearkillerpt.xyz;
+	# Add index.php to the list if you are using PHP
+	index index.html;
+
+	server_name aws.hoterway.com;
+
 
 	location / {
+
+
 		# First attempt to serve request as file, then
 		# as directory, then fall back to displaying a 404
-     		proxy_pass http://127.0.0.1:8989/;
-     		proxy_set_header Host $host;
-      proxy_set_header Upgrade $http_upgrade; # required for ws!
-      proxy_set_header Connection $http_connection;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header X-Forwarded-Proto $scheme;
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Real-Port $remote_port;
-      proxy_http_version 1.1;
-      proxy_cache off;
-      proxy_buffering off;
-      proxy_redirect off;
-      proxy_request_buffering off;
-      proxy_ignore_client_abort on;
-      proxy_connect_timeout 7200;
-      proxy_read_timeout 7200;
-      proxy_send_timeout 7200;
-      client_max_body_size 0;
-	}
+     		#proxy_pass http://127.0.0.1:3005;
+     		#proxy_set_header X-Real-IP $remote_addr;
+     		#proxy_set_header HOST $http_host;
+		#error_page 404 403 500 503 /nginx404.html;
+		try_files $uri $uri/ /index.html;
 
-	# pass PHP scripts to FastCGI server
+	}
+		# pass PHP scripts to FastCGI server
 	#
 	#location ~ \.php$ {
 	#	include snippets/fastcgi-php.conf;
@@ -83,9 +74,8 @@ server {
 	#	deny all;
 	#}
     listen 443 ssl;
-    ssl_certificate /etc/letsencrypt/live/api.auditwaiting.com/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/api.auditwaiting.com/privkey.pem; # managed by Certbot
-
+    ssl_certificate /etc/letsencrypt/live/aws.hoterway.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/aws.hoterway.com/privkey.pem; # managed by Certbot
 
 
 }
@@ -111,7 +101,7 @@ server {
 #}
 
 server {
-    if ($host = droppy.bearkillerpt.xyz) {
+    if ($host = aws.hoterway.com) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
@@ -122,8 +112,11 @@ server {
 	listen 80;
 	listen [::]:80;
 
-	server_name droppy.bearkillerpt.xyz;
-    return 404; # managed by Certbot
+	server_name aws.hoterway.com;
+
+
+
+    #return 404; # managed by Certbot
 
 
 
