@@ -4,10 +4,10 @@ After=network.target
 StartLimitIntervalSec=0
 [Service]
 Type=simple
-Restart=always
-RestartSec=3600
 User=pi
 ExecStart=/home/pi/updateDNS.sh
+RestartSec=120
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
