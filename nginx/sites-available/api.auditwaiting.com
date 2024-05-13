@@ -69,7 +69,7 @@ server {
 	#location ~ /\.ht {
 	#	deny all;
 	#}
-	listen 80;
+	#listen 80;
     listen 443 ssl;
     ssl_certificate /etc/letsencrypt/live/api.auditwaiting.com/fullchain.pem; # managed by Certbot
     ssl_certificate_key /etc/letsencrypt/live/api.auditwaiting.com/privkey.pem; # managed by Certbot
@@ -110,8 +110,4 @@ server {
 
 	server_name api.auditwaiting.com;
     return 404; # managed by Certbot
-
-
-
-
 }
