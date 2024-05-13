@@ -118,7 +118,7 @@ server {
 	
     
 
-    #return 404; # managed by Certbot
+    return 404; # managed by Certbot
 
 
 
