@@ -80,11 +80,9 @@ server {
    }	
 
 	listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/bdl.bearkillerpt.xyz/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/bdl.bearkillerpt.xyz/privkey.pem; # managed by Certbot
 
-
-
-	ssl_certificate /etc/letsencrypt/live/nextcloud.bearkillerpt.xyz/fullchain.pem; # managed by Certbot
-		ssl_certificate_key /etc/letsencrypt/live/nextcloud.bearkillerpt.xyz/privkey.pem; # managed by Certbot
 }
 
 server {
