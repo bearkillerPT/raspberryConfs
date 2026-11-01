@@ -23,6 +23,7 @@ let
 in
 {
   services.nginx.virtualHosts."bearkillerpt.xyz" = {
+    serverAliases = [ "www.bearkillerpt.xyz" ];
     enableACME = true;
     forceSSL = true;
     root = site;

@@ -5,10 +5,13 @@
     enable = true;
     configFile = config.sops.templates."ddclient.conf".path;
   };
+  # Its pre-start resolves the DynamicUser by name, which fails at boot until nsncd is up
+  systemd.services.ddclient.after = [ "nss-user-lookup.target" ];
 
   sops.secrets."ddns/bearkillerpt.xyz" = { };
   sops.secrets."ddns/plughere.app" = { };
   sops.templates."ddclient.conf".content = ''
+    cache=/var/lib/ddclient/ddclient.cache
     usev4=webv4, webv4=ipify-ipv4
     ssl=yes
     protocol=namecheap

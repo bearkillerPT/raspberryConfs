@@ -58,9 +58,10 @@ boots the Pi with the SD card unmounted.
    (if it was built from `.#installer`).
 3. Write the image to the card:
    `zstd -dc result/sd-image/*.img.zst | ssh root@192.168.1.141 'dd of=/dev/mmcblk0 bs=4M conv=fsync'`
-4. Put the Pi's SSH host key on the card, so it can decrypt its secrets:
+4. Put the Pi's SSH host key on the card, so it can decrypt its secrets. Mount the card by device
+   name: the stick's root is also labelled `NIXOS_SD`.
    ```bash
-   ssh root@192.168.1.141 'mount /dev/disk/by-label/NIXOS_SD /mnt && mkdir -p /mnt/etc/ssh'
+   ssh root@192.168.1.141 'partprobe /dev/mmcblk0 && mount /dev/mmcblk0p2 /mnt && mkdir -p /mnt/etc/ssh'
    sops --decrypt secrets/pi_ssh_host_ed25519_key \
      | ssh root@192.168.1.141 'install -m 600 /dev/stdin /mnt/etc/ssh/ssh_host_ed25519_key'
    scp keys/pi_ssh_host_ed25519_key.pub root@192.168.1.141:/mnt/etc/ssh/ssh_host_ed25519_key.pub

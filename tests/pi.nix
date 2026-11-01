@@ -44,6 +44,7 @@ pkgs.testers.runNixOSTest {
     with subtest("static sites"):
         for host in [
             "bearkillerpt.xyz",
+            "www.bearkillerpt.xyz",
             "plughere.app",
             "www.plughere.app",
             "heaboo.bearkillerpt.xyz",
