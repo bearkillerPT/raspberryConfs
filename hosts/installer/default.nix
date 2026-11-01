@@ -31,10 +31,7 @@
   # The stock installer only starts sshd from the console, and the Pi has no screen.
   systemd.services.sshd.wantedBy = lib.mkForce [ "multi-user.target" ];
   services.openssh.settings.PasswordAuthentication = false;
-  users.users.root.openssh.authorizedKeys.keys = [
-    # laptop (~/.ssh/id_rsa)
-    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC8+t/wTP8FOB+aFHU9Wwzp8vxYaHDPBj1xL9CVemLpFLbYSB3MJbB9DsprzneYNzl2XBBDaUa3XNrmN+j5j78JPTWMI6VRGPU3qi75GGlOg4SiYg4syqJEGwWXkqV8LrTMD2FPzXruOogp9oyN4dpWGl6zW0W4ZcAojGgzZwgxTJ37713cxM++VKalDisBYQjESBYf5JPQkmh96ZoG69OK3IosZssDu+vOwMPj03hhg5IUfI95LTgD8dgA3NHXPxQG51r6+TkjFHXt6s31qEO5Qz124vXW3HQeEkOdLws2izw/yxTBZnPi5BU0iAGjebmo0WKfSZoIohg2DlNp2m20d3Eg4XBZxKdcIB6I5gJ9gLOBMDbc4pwbtb7wONRseoygMKblREGDIJdboYQbOR7rWjiDmr1AayUEeg17ZsBOJglPhhVbIJdr1ZNNko6gaNDzTFuuCqQcDd/x33OmN7Qkx3WdYdXL1Ijdlmf1Kast3RK5UyRiQFZlDUGYbqO7KqkCq2xtyKif7af0OERbxRSDDgsE9+kp5lYoPPi7oHIEalj51kzZNHt/fXH4hJDdm+gwfgMZJgypljbt0BhpvULu1v+PF9yxjQhMjTS4344ML4amm0Rbs7aBm+pcLjD1+6Tr9xhofR9LmqRmhnH8j2VD7c6ZY8JXsdK6r/kid0lGyw=="
-  ];
+  users.users.root.openssh.authorizedKeys.keyFiles = [ ../../keys/laptop.pub ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 

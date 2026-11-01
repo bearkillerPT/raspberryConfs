@@ -1,0 +1,15 @@
+.examplesContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+.cubeWin{
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+.exampleTitle{
+    text-align: center;
+    font-size: 15;
+}

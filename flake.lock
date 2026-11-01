@@ -1,5 +1,37 @@
 {
   "nodes": {
+    "DataMining": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1676342914,
+        "narHash": "sha256-ISpXRyDk4pxug+oYZDT3ly6JE4bBRyfXqtUMp5gO9Qg=",
+        "owner": "bearkillerPT",
+        "repo": "DataMining",
+        "rev": "11e105728f91f6de5d6cbec1227eb595b6f6e87b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "bearkillerPT",
+        "repo": "DataMining",
+        "type": "github"
+      }
+    },
+    "check-facade": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793493454,
+        "narHash": "sha256-WCchx2zRQJ4Hvg/on+j1gPFno9+aQBFO22yPKOKvxXE=",
+        "ref": "refs/heads/main",
+        "rev": "57f2a4988d67492e6e5054ea64ecd982da06502d",
+        "revCount": 12,
+        "type": "git",
+        "url": "ssh://git@github.com-private/bearkillerPT/check-facade"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com-private/bearkillerPT/check-facade"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1793410479,
@@ -16,9 +48,67 @@
         "type": "github"
       }
     },
+    "park2Charge": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791405398,
+        "narHash": "sha256-4buR0fVianl7v0PiNYrSmk0NOYpY4YwrAiwsp/AcF/Y=",
+        "ref": "feature/Claude_rewrite",
+        "rev": "4634311f2a0f2434051dce8a156387886491d1c7",
+        "revCount": 485,
+        "type": "git",
+        "url": "ssh://git@github.com-private/bearkillerPT/park2Charge"
+      },
+      "original": {
+        "ref": "feature/Claude_rewrite",
+        "type": "git",
+        "url": "ssh://git@github.com-private/bearkillerPT/park2Charge"
+      }
+    },
+    "repos-website": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1770482114,
+        "narHash": "sha256-V5j9thysADsY2TX+/akVn7v1kT1+BUis1C7a3jQ1ApE=",
+        "owner": "bearkillerPT",
+        "repo": "repos-website",
+        "rev": "648038ccb322fb50b9518817d1a92d3149fea9ce",
+        "type": "github"
+      },
+      "original": {
+        "owner": "bearkillerPT",
+        "repo": "repos-website",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "DataMining": "DataMining",
+        "check-facade": "check-facade",
+        "nixpkgs": "nixpkgs",
+        "park2Charge": "park2Charge",
+        "repos-website": "repos-website",
+        "sops-nix": "sops-nix"
+      }
+    },
+    "sops-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793052255,
+        "narHash": "sha256-Y/JIHTnMlOabDfyaSBubWGLDIVGihLEUuoMhFvQKaDo=",
+        "owner": "Mic92",
+        "repo": "sops-nix",
+        "rev": "60182817ee048ac94b4c68ea76d5ef2e8aac730d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Mic92",
+        "repo": "sops-nix",
+        "type": "github"
       }
     }
   },
