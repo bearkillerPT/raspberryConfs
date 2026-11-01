@@ -4,11 +4,7 @@
 let
   src = inputs.park2Charge;
 
-  # The output is plain files, so build it natively on the deploy machine (x86_64)
-  # instead of under ARM emulation
-  buildPkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
-
-  website = buildPkgs.buildNpmPackage {
+  website = pkgs.buildNpmPackage {
     pname = "plughere-website";
     version = src.shortRev;
     src = "${src}/plug-here-website";

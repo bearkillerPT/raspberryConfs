@@ -47,7 +47,7 @@
       installer = self.nixosConfigurations.installer.config.system.build.sdImage;
     };
 
-    # nix run .#deploy → builds on this machine and switches the Pi to the working tree's config
+    # nix run .#deploy → switches the Pi to this working tree's config, built on the Pi
     apps.x86_64-linux.deploy =
       let
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
@@ -56,7 +56,7 @@
         type = "app";
         program = toString (pkgs.writeShellScript "deploy" ''
           exec ${pkgs.nixos-rebuild-ng}/bin/nixos-rebuild switch --flake .#pi \
-            --target-host pi@192.168.1.141 --sudo --use-substitutes "$@"
+            --target-host pi@192.168.1.141 --build-host pi@192.168.1.141 --sudo --use-substitutes "$@"
         '');
       };
 

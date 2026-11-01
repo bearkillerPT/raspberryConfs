@@ -22,6 +22,7 @@ pkgs.testers.runNixOSTest {
     # sops-nix won't read a key from the Nix store, so put it in place before it decrypts
     system.activationScripts.testAgeKey.text = "install -m 600 ${./age-key.txt} /run/test-age-key.txt";
     system.activationScripts.setupSecrets.deps = [ "testAgeKey" ];
+    system.activationScripts.setupSecretsForUsers.deps = [ "testAgeKey" ];
 
     security.acme.defaults.server = "https://acme.invalid/directory";
 
@@ -106,5 +107,8 @@ pkgs.testers.runNixOSTest {
         pi.wait_for_unit("check-facade.timer")
         pi.wait_for_unit("pccomponentes.timer")
         pi.succeed("systemctl cat ddclient.service")
+
+    with subtest("pi has a console password"):
+        pi.succeed("grep -q '^pi:\\$y\\$' /etc/shadow")
   '';
 }

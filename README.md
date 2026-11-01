@@ -33,27 +33,46 @@ Router forwards: 80, 443, 22, 1883, 8081 → the Pi; 8080 → the OpenHAB box (c
 
 ## Everyday use
 
-Run these from this directory on the laptop (Nix with flakes and aarch64 emulation).
+The Pi builds itself. This repo is cloned at `~/raspberryConfs` on the Pi:
 
 ```bash
-nix build .#checks.x86_64-linux.pi -L   # VM test: boots everything and checks every site
-nix run .#deploy                         # build here, switch the Pi over SSH (pi@192.168.1.141)
-nix flake update park2Charge             # pick up new commits of an app, then test and deploy
-sops secrets/pi.yaml                     # edit secrets (needs ~/.config/sops/age/keys.txt)
+cd ~/raspberryConfs
+git pull                                 # changes pushed from elsewhere
+nix flake update park2Charge             # pick up new commits of an app
+sudo nixos-rebuild switch --flake .#pi   # build and switch
 ```
 
-A deploy that breaks the Pi can be undone with `sudo nixos-rebuild switch --rollback` on the Pi,
-or by picking the previous generation in the boot menu.
+From another machine with Nix and this repo, `nix run .#deploy` does the same over SSH (the Pi still
+does the building), and `nix build .#checks.x86_64-linux.pi -L` runs the VM test (x86_64 only).
 
-**Keep a copy of `~/.config/sops/age/keys.txt` somewhere safe** (a password manager). Without it,
-nobody can decrypt `secrets/`, and reinstalling the Pi means recreating every secret.
+A switch that breaks the Pi can be undone with `sudo nixos-rebuild switch --rollback`, or by picking
+the previous generation in the boot menu.
+
+The private repos (park2Charge, check-facade) are fetched through the `github.com-private` SSH alias.
+On the Pi it's set up in `configuration.nix` with `~/.ssh/id_github_private`; anywhere else, define the
+same alias in `~/.ssh/config`.
+
+### Secrets
+
+`sops secrets/pi.yaml` edits them. It needs an age key that `.sops.yaml` lists, like Gil's
+`~/.config/sops/age/keys.txt`. **Keep a copy of that key somewhere safe** (a password manager): without
+it, nobody can change `secrets/`, and reinstalling the Pi means recreating every secret.
+
+`pi` has a password only for the console (keyboard and screen). To change it, run this where the age
+key is, then commit, push and switch:
+
+```bash
+nix shell nixpkgs#sops nixpkgs#mkpasswd -c sh -c \
+  'sops set secrets/pi.yaml "[\"pi\"][\"password-hash\"]" "\"$(mkpasswd -m yescrypt)\""'
+```
 
 ## Installing or reinstalling the SD card
 
 The Pi's bootloader tries USB before the SD card (`BOOT_ORDER=0xf14`), so the installer stick
 boots the Pi with the SD card unmounted.
 
-1. `nix build .#pi-image` builds the full SD image.
+1. `nix build .#pi-image` builds the full SD image (on an x86_64 machine this needs aarch64
+   emulation, `boot.binfmt.emulatedSystems` or qemu-user's binfmt).
 2. Plug the installer stick into the Pi and reboot. It comes up as `root@192.168.1.141`
    (if it was built from `.#installer`).
 3. Write the image to the card:
@@ -69,5 +88,7 @@ boots the Pi with the SD card unmounted.
    ```
 5. Unplug the stick, power-cycle the Pi. The root partition grows to fill the card on first boot.
 6. Restore data (databases, Nextcloud files, Gotify, uploads) from the latest backup.
+7. So the Pi can build itself again: `ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_github_private` on the
+   Pi, add the `.pub` to GitHub, and clone this repo to `~/raspberryConfs`.
 
 Never leave another bootable USB drive plugged into the Pi: it would boot instead of the SD card.
