@@ -31,7 +31,11 @@
   # The stock installer only starts sshd from the console, and the Pi has no screen.
   systemd.services.sshd.wantedBy = lib.mkForce [ "multi-user.target" ];
   services.openssh.settings.PasswordAuthentication = false;
-  users.users.root.openssh.authorizedKeys.keyFiles = [ ../../keys/laptop.pub ];
+  users.users.root.openssh.authorizedKeys.keyFiles = [
+    ../../keys/morpho-laptop.pub
+    ../../keys/lenovo-laptop.pub
+    ../../keys/windows-desktop.pub
+  ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 

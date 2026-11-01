@@ -13,7 +13,7 @@ If it's not in here, it's not on the Pi. The configs from before NixOS are under
 | `services/` | One file per service: its build, systemd units, nginx site and secrets |
 | `sites/archive/` | Frozen builds of old sites whose toolchains no longer build |
 | `secrets/` | sops-encrypted secrets (this repo is public) |
-| `keys/` | Public keys: the laptop's (SSH logins) and the Pi's host key |
+| `keys/` | Public keys: the machines that can SSH in (morpho-laptop, lenovo-laptop, windows-desktop) and the Pi's host key |
 | `tests/` | VM test that boots `configuration.nix` and checks every site, with dummy secrets |
 
 ## Sites and services

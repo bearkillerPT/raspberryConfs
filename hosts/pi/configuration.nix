@@ -28,7 +28,11 @@
     extraGroups = [ "wheel" ];
     # For logging in with a keyboard and screen; SSH stays key-only
     hashedPasswordFile = config.sops.secrets."pi/password-hash".path;
-    openssh.authorizedKeys.keyFiles = [ ../../keys/laptop.pub ];
+    openssh.authorizedKeys.keyFiles = [
+      ../../keys/morpho-laptop.pub
+      ../../keys/lenovo-laptop.pub
+      ../../keys/windows-desktop.pub
+    ];
   };
   sops.secrets."pi/password-hash".neededForUsers = true;
   security.sudo.wheelNeedsPassword = false;
@@ -41,7 +45,11 @@
       PermitRootLogin = "no";
     };
   };
-  services.fail2ban.enable = true;
+  services.fail2ban = {
+    enable = true;
+    # Never ban the home network
+    ignoreIP = [ "192.168.1.0/24" ];
+  };
 
   # The private app repos (park2Charge, check-facade) are fetched through this alias, so
   # `sudo nixos-rebuild` on the Pi can build itself. The key was generated on the Pi and
