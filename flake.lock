@@ -66,13 +66,17 @@
       }
     },
     "repos-website": {
-      "flake": false,
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
       "locked": {
-        "lastModified": 1770482114,
-        "narHash": "sha256-V5j9thysADsY2TX+/akVn7v1kT1+BUis1C7a3jQ1ApE=",
+        "lastModified": 1794307025,
+        "narHash": "sha256-KPopx+tkUq7FxmYfB7iFB5ArGMAJHoa92FTSay/REbg=",
         "owner": "bearkillerPT",
         "repo": "repos-website",
-        "rev": "648038ccb322fb50b9518817d1a92d3149fea9ce",
+        "rev": "a14dfdc8e06fbfb87b89ae7af21f989ffbe21dbd",
         "type": "github"
       },
       "original": {

@@ -18,9 +18,10 @@
       url = "git+ssh://git@github.com-private/bearkillerPT/check-facade";
       flake = false;
     };
+    # A flake: it knows how to build itself (bun + Vite), on this nixpkgs
     repos-website = {
       url = "github:bearkillerPT/repos-website";
-      flake = false;
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     DataMining = {
       url = "github:bearkillerPT/DataMining";

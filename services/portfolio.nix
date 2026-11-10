@@ -1,21 +1,8 @@
-# bearkillerpt.xyz: static build of bearkillerPT/repos-website (Create React App, yarn).
+# bearkillerpt.xyz: static build of bearkillerPT/repos-website (Vite + bun), built by that repo's
+# own flake. When its bun.lock changes, the hash in its nix/package.nix changes with it.
 { inputs, pkgs, ... }:
 let
-  site = pkgs.stdenv.mkDerivation {
-    pname = "portfolio";
-    version = inputs.repos-website.shortRev;
-    src = inputs.repos-website;
-    yarnOfflineCache = pkgs.fetchYarnDeps {
-      yarnLock = "${inputs.repos-website}/yarn.lock";
-      hash = "sha256-gzvNKA2NAV1WbqVcSwQT4oZadnCNJVqkIAIVwbJvyYA=";
-    };
-    nativeBuildInputs = with pkgs; [
-      yarnConfigHook
-      yarnBuildHook
-      nodejs
-    ];
-    installPhase = "cp -r build $out";
-  };
+  site = inputs.repos-website.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in
 {
   services.nginx.virtualHosts."bearkillerpt.xyz" = {
@@ -23,5 +10,10 @@ in
     enableACME = true;
     forceSSL = true;
     root = site;
+    # Vite puts a content hash in every file name under /assets, so they never change
+    locations."/assets/".extraConfig = ''
+      expires 1y;
+      add_header Cache-Control "public, immutable";
+    '';
   };
 }
