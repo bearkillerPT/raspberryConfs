@@ -10,6 +10,12 @@ in
     enableACME = true;
     forceSSL = true;
     root = site;
+    # Unknown addresses get the site's own "page not found" instead of nginx's
+    extraConfig = ''
+      error_page 404 /404.html;
+    '';
+    # The CV used to live here; old links (LinkedIn, emails) go to the one built with the site
+    locations."= /Curriculo.pdf".return = "301 /cv.pdf";
     # Vite puts a content hash in every file name under /assets, so they never change
     locations."/assets/".extraConfig = ''
       expires 1y;
