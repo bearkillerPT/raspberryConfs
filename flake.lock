@@ -72,11 +72,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794307025,
-        "narHash": "sha256-KPopx+tkUq7FxmYfB7iFB5ArGMAJHoa92FTSay/REbg=",
+        "lastModified": 1794359020,
+        "narHash": "sha256-cIBPR16jLTqRjGpxnC+78mAJrdJq4mayLrCI3nJAzZQ=",
         "owner": "bearkillerPT",
         "repo": "repos-website",
-        "rev": "a14dfdc8e06fbfb87b89ae7af21f989ffbe21dbd",
+        "rev": "8c81f1f01ac7b16ea8079a1cb0723bf4646ea1c6",
         "type": "github"
       },
       "original": {
