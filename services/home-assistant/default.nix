@@ -23,7 +23,10 @@ let
   uiFiles = [ "automations.yaml" "scenes.yaml" "scripts.yaml" ];
 in
 {
-  imports = [ ./facade-alerts.nix ];
+  imports = [
+    ./facade-alerts.nix
+    ./solar.nix
+  ];
 
   services.home-assistant = {
     enable = true;

@@ -215,6 +215,11 @@ pkgs.testers.runNixOSTest {
         )
         serve(items)
 
+    with subtest("home assistant: solar sensors"):
+        # No inverter in the VM: they exist, waiting for the meter
+        for entity in ["sensor.home_power", "sensor.grid_power"]:
+            assert state(entity)["state"] == "unavailable", entity
+
     with subtest("home assistant: matter"):
         # Added with the default address, as in the UI: only succeeds if HA can talk to the server
         pi.wait_for_unit("matter-server.service")

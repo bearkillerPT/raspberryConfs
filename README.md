@@ -25,7 +25,7 @@ If it's not in here, it's not on the Pi. The configs from before NixOS are under
 | nextcloud.bearkillerpt.xyz | `nextcloud.nix` |
 | gotify.bearkillerpt.xyz | `gotify.nix` |
 | price-tracker.bearkillerpt.xyz | `price-tracker.nix` (built from `price-tracker`) |
-| ha.bearkillerpt.xyz, and http://192.168.1.141:8123 on the LAN | `home-assistant/` (Home Assistant and its Matter server; a new kind of device may need its integration added there). `home-assistant/openhab` is a read-only openHAB integration, `home-assistant/huawei-solar.nix` packages the solar inverter's |
+| ha.bearkillerpt.xyz, and http://192.168.1.141:8123 on the LAN | `home-assistant/` (Home Assistant and its Matter server; a new kind of device may need its integration added there). `home-assistant/openhab` is a read-only openHAB integration, `home-assistant/huawei-solar.nix` packages the solar inverter's, `home-assistant/solar.nix` adds home and grid power |
 | edapi.bearkillerpt.xyz | `edapi.nix` (from `DataMining`) |
 | heaboo, iv, ed, bdl .bearkillerpt.xyz | `legacy-sites.nix` |
 | pccomponentes (hourly) | `pccomponentes/` |
