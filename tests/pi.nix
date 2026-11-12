@@ -136,6 +136,59 @@ pkgs.testers.runNixOSTest {
         )
         assert status == "200", f"ha.bearkillerpt.xyz/api/config: {status}"
 
+    with subtest("home assistant: openhab integration"):
+        # A stand-in openHAB: /rest/items is a static file
+        items = [
+            {"name": "T_S1", "label": "T. ambiente exterior", "type": "Number", "state": "14.88",
+             "stateDescription": {"pattern": "%.1f °C"}},
+            {"name": "Escolha_AQS", "label": "Set Point AQS", "type": "Number:Temperature", "state": "50 °C",
+             "stateDescription": {"pattern": "%.0f %unit%"}},
+            {"name": "R3", "label": "R3-Bomba circuladora", "type": "Switch", "state": "ON"},
+            {"name": "Resposta_S1", "label": "Resposta S1", "type": "Number", "state": "NULL"},
+            {"name": "Camera", "label": "Image", "type": "Image", "state": "NULL"},
+        ]
+
+        def serve(items):
+            pi.succeed(f"printf '%s' '{json.dumps(items)}' > /srv/openhab/rest/items")
+
+        pi.succeed("mkdir -p /srv/openhab/rest")
+        serve(items)
+        pi.succeed(
+            "systemd-run --unit fake-openhab -p WorkingDirectory=/srv/openhab"
+            " ${pkgs.python3}/bin/python3 -m http.server 8099 --bind 127.0.0.1"
+        )
+        pi.wait_for_open_port(8099)
+
+        # What the UI does when the integration is added
+        def post(path, body):
+            return json.loads(pi.succeed(
+                f"curl -sf -X POST {auth} -H 'Content-Type: application/json' -d '{json.dumps(body)}' {hass}/api/{path}"
+            ))
+
+        flow = post("config/config_entries/flow", {"handler": "openhab"})
+        result = post(f"config/config_entries/flow/{flow['flow_id']}", {"url": "http://127.0.0.1:8099/"})
+        assert result["type"] == "create_entry", result
+
+        def state(entity_id):
+            return json.loads(pi.succeed(f"curl -sf {auth} {hass}/api/states/{entity_id}"))
+
+        exterior = state("sensor.openhab_t_ambiente_exterior")
+        assert float(exterior["state"]) == 14.88, exterior
+        assert exterior["attributes"]["unit_of_measurement"] == "°C", exterior
+        setpoint = state("sensor.openhab_set_point_aqs")
+        assert float(setpoint["state"]) == 50 and setpoint["attributes"]["unit_of_measurement"] == "°C", setpoint
+        assert state("binary_sensor.openhab_r3_bomba_circuladora")["state"] == "on"
+        assert state("sensor.openhab_resposta_s1")["state"] == "unknown"
+        # Read-only: nothing that could send openHAB a command
+        states = json.loads(pi.succeed(f"curl -sf {auth} {hass}/api/states"))
+        domains = {s["entity_id"].split(".")[0] for s in states if ".openhab_" in s["entity_id"]}
+        assert domains == {"sensor", "binary_sensor"}, domains
+
+        # A new openHAB item shows up on the next poll, with no config change
+        serve(items + [{"name": "T_S6", "label": "New probe", "type": "Number", "state": "1.5",
+                        "stateDescription": {"pattern": "%.1f °C"}}])
+        pi.wait_until_succeeds(f"curl -sf {auth} {hass}/api/states/sensor.openhab_new_probe", timeout=120)
+
     with subtest("scheduled jobs"):
         pi.wait_for_unit("check-facade.timer")
         pi.wait_for_unit("pccomponentes.timer")

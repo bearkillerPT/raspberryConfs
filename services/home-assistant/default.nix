@@ -5,35 +5,18 @@
 # integration (the last part of its home-assistant.io/integrations/<name> URL) added below and a
 # deploy. The UI's own state (.storage, the database, backups) lives in /var/lib/hass; Nix only
 # writes configuration.yaml.
-{ config, lib, ... }:
+{ config, pkgs, ... }:
 let
   port = 8123;
   lan = "192.168.1.0/24";
 
-  # Read-only view of the heating probes that check-facade watches, through OpenHAB's REST API
-  # (reached the same way check-facade reaches it). Names are OpenHAB's labels.
-  openhab = "http://bearkillerpt.xyz:8080";
-  openhabTemperatures = {
-    T_S1 = "T. ambiente exterior";
-    T_S2 = "T. Fachada";
-    T_S3 = "T. Ambiente interior";
-    T_S4 = "T. Acumulador AQS";
-    T_S5 = "T. Inércia";
-  };
-  openhabSensor = item: name: {
-    resource = "${openhab}/rest/items/${item}/state";
-    scan_interval = 60;
-    sensor = [
-      {
-        inherit name;
-        unique_id = "openhab_${lib.toLower item}";
-        # OpenHAB answers NULL or UNDEF while a probe has no reading
-        availability = "{{ value | is_number }}";
-        device_class = "temperature";
-        state_class = "measurement";
-        unit_of_measurement = "°C";
-      }
-    ];
+  # openHAB (the heating controller), read-only: every item becomes a sensor. Added in the UI
+  # (Settings → Devices & services → Add integration → openHAB); source in ./openhab.
+  openhab = pkgs.buildHomeAssistantComponent {
+    owner = "bearkillerPT";
+    domain = "openhab";
+    version = "1.0.0";
+    src = ./openhab;
   };
 
   # Automations, scenes and scripts made in the UI are saved here
@@ -78,7 +61,13 @@ in
 
       # Zigbee, through a USB coordinator (the module gives HA the serial ports)
       "zha"
+
+      # Found on the LAN, or tried in the UI
+      "roborock"
+      "huawei_lte"
+      "co2signal"
     ];
+    customComponents = [ openhab ];
 
     config = {
       default_config = { };
@@ -104,8 +93,6 @@ in
       "automation ui" = "!include automations.yaml";
       "scene ui" = "!include scenes.yaml";
       "script ui" = "!include scripts.yaml";
-
-      rest = lib.mapAttrsToList openhabSensor openhabTemperatures;
     };
   };
 
