@@ -65,6 +65,22 @@
         "url": "ssh://git@github.com-private/bearkillerPT/park2Charge"
       }
     },
+    "price-tracker": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794446014,
+        "narHash": "sha256-wwmMkPgbdbVOI0nUdhHwlnMakcocTaqxAhDrLChoeAM=",
+        "owner": "bearkillerPT",
+        "repo": "price-tracker",
+        "rev": "bcb9adbbfacdaba17119e0cc1ca0b1d8cb8e1d2a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "bearkillerPT",
+        "repo": "price-tracker",
+        "type": "github"
+      }
+    },
     "repos-website": {
       "inputs": {
         "nixpkgs": [
@@ -91,6 +107,7 @@
         "check-facade": "check-facade",
         "nixpkgs": "nixpkgs",
         "park2Charge": "park2Charge",
+        "price-tracker": "price-tracker",
         "repos-website": "repos-website",
         "sops-nix": "sops-nix"
       }

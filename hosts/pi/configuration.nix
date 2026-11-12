@@ -12,6 +12,7 @@
     ../../services/nextcloud.nix
     ../../services/gotify.nix
     ../../services/check-facade.nix
+    ../../services/price-tracker.nix
     ../../services/pccomponentes
     ../../services/ddns.nix
   ];

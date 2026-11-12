@@ -27,6 +27,11 @@
       url = "github:bearkillerPT/DataMining";
       flake = false;
     };
+    # Built here (services/price-tracker.nix), so the app repo needs no Nix packaging
+    price-tracker = {
+      url = "github:bearkillerPT/price-tracker";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, ... }@inputs: {

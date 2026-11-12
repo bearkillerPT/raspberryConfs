@@ -24,6 +24,7 @@ If it's not in here, it's not on the Pi. The configs from before NixOS are under
 | plughere.app, api.plughere.app, plughereapi.bearkillerpt.xyz, mosquitto.plughere.app, MQTT on 1883/8081 | `plughere.nix` (built from `park2Charge`, branch `feature/Claude_rewrite`) |
 | nextcloud.bearkillerpt.xyz | `nextcloud.nix` |
 | gotify.bearkillerpt.xyz | `gotify.nix` |
+| price-tracker.bearkillerpt.xyz | `price-tracker.nix` (built from `price-tracker`) |
 | edapi.bearkillerpt.xyz | `edapi.nix` (from `DataMining`) |
 | heaboo, iv, ed, bdl .bearkillerpt.xyz | `legacy-sites.nix` |
 | check-facade (every 5 min), pccomponentes (hourly) | `check-facade.nix`, `pccomponentes/` |

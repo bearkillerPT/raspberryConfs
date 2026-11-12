@@ -103,6 +103,13 @@ pkgs.testers.runNixOSTest {
         pi.wait_until_succeeds("nextcloud-occ status | grep -q 'installed: true'", timeout=300)
         expect("nextcloud.bearkillerpt.xyz", "/status.php", "200")
 
+    with subtest("price tracker"):
+        pi.wait_for_unit("price-tracker.service")
+        pi.wait_for_open_port(4380)
+        expect("price-tracker.bearkillerpt.xyz", "/api/health", "200")
+        expect("price-tracker.bearkillerpt.xyz", "/", "200")
+        pi.succeed("echo 'a test password' | runuser -u price-tracker -- price-tracker reset-password --password-stdin")
+
     with subtest("scheduled jobs"):
         pi.wait_for_unit("check-facade.timer")
         pi.wait_for_unit("pccomponentes.timer")
