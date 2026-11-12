@@ -25,12 +25,13 @@ If it's not in here, it's not on the Pi. The configs from before NixOS are under
 | nextcloud.bearkillerpt.xyz | `nextcloud.nix` |
 | gotify.bearkillerpt.xyz | `gotify.nix` |
 | price-tracker.bearkillerpt.xyz | `price-tracker.nix` (built from `price-tracker`) |
+| ha.bearkillerpt.xyz, and http://192.168.1.141:8123 on the LAN | `home-assistant.nix` (Home Assistant; a new kind of device may need its integration added there) |
 | edapi.bearkillerpt.xyz | `edapi.nix` (from `DataMining`) |
 | heaboo, iv, ed, bdl .bearkillerpt.xyz | `legacy-sites.nix` |
 | check-facade (every 5 min), pccomponentes (hourly) | `check-facade.nix`, `pccomponentes/` |
 | Namecheap dynamic DNS | `ddns.nix` |
 
-Router forwards: 80, 443, 22, 1883, 8081 → the Pi; 8080 → the OpenHAB box (check-facade reads it).
+Router forwards: 80, 443, 22, 1883, 8081 → the Pi; 8080 → the OpenHAB box (check-facade and Home Assistant read it).
 
 ## Everyday use
 

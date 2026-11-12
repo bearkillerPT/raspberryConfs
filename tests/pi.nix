@@ -110,6 +110,32 @@ pkgs.testers.runNixOSTest {
         expect("price-tracker.bearkillerpt.xyz", "/", "200")
         pi.succeed("echo 'a test password' | runuser -u price-tracker -- price-tracker reset-password --password-stdin")
 
+    with subtest("home assistant"):
+        import json
+
+        pi.wait_for_unit("home-assistant.service")
+        pi.wait_for_open_port(8123, timeout=600)
+        pi.succeed("grep -qxF '[]' /var/lib/hass/automations.yaml")
+        # Onboard a throwaway owner for a token, then ask HA to check configuration.yaml
+        hass = "http://127.0.0.1:8123"
+        user = json.dumps({"client_id": f"{hass}/", "name": "Test", "username": "test",
+                           "password": "a test password", "language": "en"})
+        code = json.loads(pi.succeed(f"curl -sf {hass}/api/onboarding/users -H 'Content-Type: application/json' -d '{user}'"))["auth_code"]
+        token = json.loads(pi.succeed(
+            f"curl -sf {hass}/auth/token -d grant_type=authorization_code -d code={code} -d client_id={hass}/"
+        ))["access_token"]
+        auth = f"-H 'Authorization: Bearer {token}'"
+        pi.wait_until_succeeds(f"curl -sf {auth} {hass}/api/config | grep -q '\"state\": *\"RUNNING\"'", timeout=300)
+        check = json.loads(pi.succeed(f"curl -sf -X POST {auth} {hass}/api/config/core/check_config"))
+        assert check["result"] == "valid", check
+        # Through nginx: HA refuses forwarded requests from proxies it doesn't trust (400)
+        expect("ha.bearkillerpt.xyz", "/manifest.json", "200")
+        status = pi.succeed(
+            f"curl -sk -o /dev/null -w '%{{http_code}}' {auth} --resolve ha.bearkillerpt.xyz:443:127.0.0.1"
+            " https://ha.bearkillerpt.xyz/api/config"
+        )
+        assert status == "200", f"ha.bearkillerpt.xyz/api/config: {status}"
+
     with subtest("scheduled jobs"):
         pi.wait_for_unit("check-facade.timer")
         pi.wait_for_unit("pccomponentes.timer")

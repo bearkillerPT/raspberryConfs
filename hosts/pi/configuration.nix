@@ -13,6 +13,7 @@
     ../../services/gotify.nix
     ../../services/check-facade.nix
     ../../services/price-tracker.nix
+    ../../services/home-assistant.nix
     ../../services/pccomponentes
     ../../services/ddns.nix
   ];
