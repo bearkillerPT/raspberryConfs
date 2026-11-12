@@ -139,8 +139,16 @@ pkgs.testers.runNixOSTest {
     with subtest("home assistant: openhab integration"):
         # A stand-in openHAB: /rest/items is a static file
         items = [
-            {"name": "T_S1", "label": "T. ambiente exterior", "type": "Number", "state": "14.88",
-             "stateDescription": {"pattern": "%.1f °C"}},
+            # The five facade probes, labelled as on the real openHAB (facade-alerts.nix uses their names)
+            *[{"name": name, "label": label, "type": "Number", "state": value,
+               "stateDescription": {"pattern": "%.1f °C"}}
+              for name, label, value in [
+                  ("T_S1", "T. ambiente exterior", "14.88"),
+                  ("T_S2", "T. Fachada", "20.5"),
+                  ("T_S3", "T. Ambiente interior", "17.0"),
+                  ("T_S4", "T. Acumulador AQS", "43.6"),
+                  ("T_S5", "T. Inércia", "16.3"),
+              ]],
             {"name": "Escolha_AQS", "label": "Set Point AQS", "type": "Number:Temperature", "state": "50 °C",
              "stateDescription": {"pattern": "%.0f %unit%"}},
             {"name": "R3", "label": "R3-Bomba circuladora", "type": "Switch", "state": "ON"},
@@ -185,12 +193,45 @@ pkgs.testers.runNixOSTest {
         assert domains == {"sensor", "binary_sensor"}, domains
 
         # A new openHAB item shows up on the next poll, with no config change
-        serve(items + [{"name": "T_S6", "label": "New probe", "type": "Number", "state": "1.5",
-                        "stateDescription": {"pattern": "%.1f °C"}}])
+        items.append({"name": "T_S6", "label": "New probe", "type": "Number", "state": "1.5",
+                      "stateDescription": {"pattern": "%.1f °C"}})
+        serve(items)
         pi.wait_until_succeeds(f"curl -sf {auth} {hass}/api/states/sensor.openhab_new_probe", timeout=120)
 
+    with subtest("home assistant: facade alerts"):
+        alerts = ["openhab_unreachable", "probe_without_a_reading", "temperature_out_of_range",
+                  "probe_stuck", "colder_than_outside"]
+        for alert in alerts:
+            assert state(f"automation.facade_{alert}")["state"] == "on", alert
+        # Nothing is wrong yet
+        for alert in alerts:
+            assert state(f"automation.facade_{alert}")["attributes"]["last_triggered"] is None, alert
+        # A probe beyond 100 °C alerts on the next poll (the phone isn't there; the HA notification is)
+        serve([dict(i, state="150") if i["name"] == "T_S3" else i for i in items])
+        pi.wait_until_succeeds(
+            f"curl -sf {auth} {hass}/api/states/automation.facade_temperature_out_of_range"
+            " | grep -q '\"last_triggered\": *\"'",
+            timeout=120,
+        )
+        serve(items)
+
+    with subtest("home assistant: matter"):
+        # Added with the default address, as in the UI: only succeeds if HA can talk to the server
+        pi.wait_for_unit("matter-server.service")
+        pi.wait_for_open_port(5580, timeout=300)
+        flow = post("config/config_entries/flow", {"handler": "matter"})
+        assert flow["step_id"] == "manual", flow
+        result = post(f"config/config_entries/flow/{flow['flow_id']}", {"url": "ws://localhost:5580/ws"})
+        assert result["type"] == "create_entry", result
+        pi.succeed("test $(sysctl -n net.netfilter.nf_conntrack_udp_timeout_stream) = 3600")
+
+    with subtest("home assistant: huawei solar loads"):
+        # Its first setup step only shows if the integration and its libraries import
+        flow = post("config/config_entries/flow", {"handler": "huawei_solar"})
+        assert flow["type"] in ("form", "menu"), flow
+        pi.succeed(f"curl -sf -X DELETE {auth} {hass}/api/config/config_entries/flow/{flow['flow_id']}")
+
     with subtest("scheduled jobs"):
-        pi.wait_for_unit("check-facade.timer")
         pi.wait_for_unit("pccomponentes.timer")
         pi.succeed("systemctl cat ddclient.service")
 

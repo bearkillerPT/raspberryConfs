@@ -9,13 +9,9 @@
     };
 
     # Apps served by the Pi; `nix flake update <name>` picks up new commits.
-    # The private repos go through the `github.com-private` alias in ~/.ssh/config.
+    # The private repo goes through the `github.com-private` alias in ~/.ssh/config.
     park2Charge = {
       url = "git+ssh://git@github.com-private/bearkillerPT/park2Charge?ref=feature/Claude_rewrite";
-      flake = false;
-    };
-    check-facade = {
-      url = "git+ssh://git@github.com-private/bearkillerPT/check-facade";
       flake = false;
     };
     # A flake: it knows how to build itself (bun + Vite), on this nixpkgs

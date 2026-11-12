@@ -11,7 +11,6 @@
     ../../services/plughere.nix
     ../../services/nextcloud.nix
     ../../services/gotify.nix
-    ../../services/check-facade.nix
     ../../services/price-tracker.nix
     ../../services/home-assistant
     ../../services/pccomponentes
@@ -53,7 +52,7 @@
     ignoreIP = [ "192.168.1.0/24" ];
   };
 
-  # The private app repos (park2Charge, check-facade) are fetched through this alias, so
+  # The private app repo (park2Charge) is fetched through this alias, so
   # `sudo nixos-rebuild` on the Pi can build itself. The key was generated on the Pi and
   # added to GitHub by hand.
   programs.ssh.extraConfig = ''

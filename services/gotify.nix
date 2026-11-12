@@ -1,5 +1,5 @@
 # Gotify push notifications. The phone app connects to gotify.bearkillerpt.xyz; the scripts
-# (check-facade, pccomponentes) post to it locally on port 8082.
+# (pccomponentes, price-tracker) post to it locally on port 8082.
 { config, ... }:
 {
   services.gotify = {

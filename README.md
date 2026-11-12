@@ -25,13 +25,13 @@ If it's not in here, it's not on the Pi. The configs from before NixOS are under
 | nextcloud.bearkillerpt.xyz | `nextcloud.nix` |
 | gotify.bearkillerpt.xyz | `gotify.nix` |
 | price-tracker.bearkillerpt.xyz | `price-tracker.nix` (built from `price-tracker`) |
-| ha.bearkillerpt.xyz, and http://192.168.1.141:8123 on the LAN | `home-assistant/` (Home Assistant; a new kind of device may need its integration added there). `home-assistant/openhab` is a read-only openHAB integration |
+| ha.bearkillerpt.xyz, and http://192.168.1.141:8123 on the LAN | `home-assistant/` (Home Assistant and its Matter server; a new kind of device may need its integration added there). `home-assistant/openhab` is a read-only openHAB integration, `home-assistant/huawei-solar.nix` packages the solar inverter's |
 | edapi.bearkillerpt.xyz | `edapi.nix` (from `DataMining`) |
 | heaboo, iv, ed, bdl .bearkillerpt.xyz | `legacy-sites.nix` |
-| check-facade (every 5 min), pccomponentes (hourly) | `check-facade.nix`, `pccomponentes/` |
+| pccomponentes (hourly) | `pccomponentes/` |
 | Namecheap dynamic DNS | `ddns.nix` |
 
-Router forwards: 80, 443, 22, 1883, 8081 → the Pi; 8080 → the OpenHAB box (check-facade and Home Assistant read it).
+Router forwards: 80, 443, 22, 1883, 8081 → the Pi; 8080 → the OpenHAB box (Home Assistant reads it, and alerts on the facade probes: `home-assistant/facade-alerts.nix`).
 
 ## Everyday use
 
@@ -50,7 +50,7 @@ does the building), and `nix build .#checks.x86_64-linux.pi -L` runs the VM test
 A switch that breaks the Pi can be undone with `sudo nixos-rebuild switch --rollback`, or by picking
 the previous generation in the boot menu.
 
-The private repos (park2Charge, check-facade) are fetched through the `github.com-private` SSH alias.
+The private repo (park2Charge) is fetched through the `github.com-private` SSH alias.
 On the Pi it's set up in `configuration.nix` with `~/.ssh/id_github_private`; anywhere else, define the
 same alias in `~/.ssh/config`.
 

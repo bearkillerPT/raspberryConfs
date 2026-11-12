@@ -23,6 +23,8 @@ let
   uiFiles = [ "automations.yaml" "scenes.yaml" "scripts.yaml" ];
 in
 {
+  imports = [ ./facade-alerts.nix ];
+
   services.home-assistant = {
     enable = true;
     extraComponents = [
@@ -62,12 +64,18 @@ in
       # Zigbee, through a USB coordinator (the module gives HA the serial ports)
       "zha"
 
+      # Matter, through matter-server below (the SONOFF AirGuard CO2 is Matter over Wi-Fi)
+      "matter"
+
       # Found on the LAN, or tried in the UI
       "roborock"
-      "huawei_lte"
       "co2signal"
     ];
-    customComponents = [ openhab ];
+    customComponents = [
+      openhab
+      # The solar inverter, over Modbus TCP
+      (pkgs.callPackage ./huawei-solar.nix { })
+    ];
 
     config = {
       default_config = { };
@@ -103,6 +111,15 @@ in
   # The Pi 4's onboard radio, for Bluetooth LE sensors
   hardware.bluetooth.enable = true;
 
+  # HA's Matter integration connects to it at ws://localhost:5580/ws (the firewall keeps 5580
+  # closed). Matter over Wi-Fi needs no Thread border router; Thread devices would.
+  services.matter-server.enable = true;
+  # Matter devices report back over UDP flows the server opened, sometimes minutes apart. The
+  # kernel forgets an idle UDP flow after 120 s, and the firewall then drops the next report;
+  # matter.js recommends an hour. The module is loaded early so the setting applies at boot.
+  boot.kernelModules = [ "nf_conntrack" ];
+  boot.kernel.sysctl."net.netfilter.nf_conntrack_udp_timeout_stream" = 3600;
+
   services.nginx.virtualHosts."ha.bearkillerpt.xyz" = {
     enableACME = true;
     forceSSL = true;
@@ -121,9 +138,12 @@ in
   # the web UI on 8123, Sonos' event callbacks, and UDP for device discovery. Discovery
   # protocols (mDNS, SSDP, TP-Link, Shelly…) answer multicast or broadcast queries from their
   # own ports, which the firewall's connection tracking can't match to the query.
+  # Over IPv6 the LAN is the link-local range, which can't come from the internet: Matter
+  # finds devices with IPv6 mDNS.
   networking.firewall.extraCommands = ''
     iptables -A nixos-fw -s ${lan} -p tcp --dport ${toString port} -j nixos-fw-accept
     iptables -A nixos-fw -s ${lan} -p tcp --dport 1400 -j nixos-fw-accept
     iptables -A nixos-fw -s ${lan} -p udp -j nixos-fw-accept
+    ip6tables -A nixos-fw -s fe80::/10 -p udp -j nixos-fw-accept
   '';
 }

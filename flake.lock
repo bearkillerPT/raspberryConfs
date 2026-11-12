@@ -16,22 +16,6 @@
         "type": "github"
       }
     },
-    "check-facade": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1793493454,
-        "narHash": "sha256-WCchx2zRQJ4Hvg/on+j1gPFno9+aQBFO22yPKOKvxXE=",
-        "ref": "refs/heads/main",
-        "rev": "57f2a4988d67492e6e5054ea64ecd982da06502d",
-        "revCount": 12,
-        "type": "git",
-        "url": "ssh://git@github.com-private/bearkillerPT/check-facade"
-      },
-      "original": {
-        "type": "git",
-        "url": "ssh://git@github.com-private/bearkillerPT/check-facade"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1793410479,
@@ -104,7 +88,6 @@
     "root": {
       "inputs": {
         "DataMining": "DataMining",
-        "check-facade": "check-facade",
         "nixpkgs": "nixpkgs",
         "park2Charge": "park2Charge",
         "price-tracker": "price-tracker",
