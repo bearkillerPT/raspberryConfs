@@ -76,6 +76,8 @@ in
     ];
     customComponents = [
       openhab
+      # Local LAN control for the three Midea air conditioners
+      pkgs.home-assistant-custom-components.midea_ac
       # The solar inverter, over Modbus TCP
       (pkgs.callPackage ./huawei-solar.nix { })
     ];
