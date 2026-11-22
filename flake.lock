@@ -52,11 +52,11 @@
     "price-tracker": {
       "flake": false,
       "locked": {
-        "lastModified": 1794659400,
-        "narHash": "sha256-YLBGF41dNmC9Ja9XT4TLpnIRq5v1aBmCeWC3THgt+D0=",
+        "lastModified": 1795306884,
+        "narHash": "sha256-pkyQfls/fRpnYBBM4Y+qbWwUnmN+5eF0ZYDcvcDNpjQ=",
         "owner": "bearkillerPT",
         "repo": "price-tracker",
-        "rev": "a5e2ab46b294697d88df3248af86baaf77154786",
+        "rev": "210b00db4fdec6ec4d79127379dd642c69d5d407",
         "type": "github"
       },
       "original": {
